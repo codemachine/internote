@@ -121,7 +121,8 @@ init: function(anyMainWindowDoc)
     this.utils      = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.utils;
     this.prefs      = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
     this.serializer = XMLSerializer;
-    this.xml        = XML;
+    // fake E4X toXMLString()
+    this.xml        = function(xml) { return {toXMLString: function() { return xml }}};
     
     // Get these now, in case they're not there later due to design (not sure) or bugs (probably occur from what I've seen).
     this.domImpl     = anyMainWindowDoc.implementation;
