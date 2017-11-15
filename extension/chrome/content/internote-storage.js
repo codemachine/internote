@@ -111,7 +111,6 @@ init: function(anyMainWindowDoc)
     this.prefs      = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.prefs;
     this.consts     = internoteSharedGlobal_e3631030_7c02_11da_a72b_0800200c9a66.consts;
     this.serializer = XMLSerializer;
-    this.xml        = XML;
     
     // Get these now, in case they're not there later due to design (not sure) or bugs (probably occur from what I've seen).
     this.domImpl     = anyMainWindowDoc.implementation;
@@ -397,12 +396,9 @@ saveXMLNow: function()
         stream.init(storageFile, 0x02 | 0x08 | 0x20, 0664, 0);
         
         var serializer = new this.serializer();
-        
-        var prettyString = this.xml(serializer.serializeToString(this.doc)).toXMLString();
-        
         var converter = this.utils.getCCInstance("@mozilla.org/intl/converter-output-stream;1", "nsIConverterOutputStream");
         converter.init(stream, "UTF-8", 0, 0);
-        converter.writeString(prettyString);
+        converter.writeString(serializer.serializeToString(this.doc));
         converter.close(); // this closes foStream
         
         this.loadStatus = this.LOAD_SUCCESS; // Everything is fine again.
@@ -1189,8 +1185,7 @@ generateNotesInV3: function(notes)
     }
     
     var serializer = new this.serializer();
-    var prettyString = this.xml(serializer.serializeToString(storageDoc)).toXMLString();
-    return prettyString;
+    return serializer.serializeToString(storageDoc);
 },
 
 generateNotesInHTML: function(notes, scratchDoc)
